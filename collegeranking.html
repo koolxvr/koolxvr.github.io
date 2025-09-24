@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduRank - US College Rankings 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sort-btn {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sort-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .sort-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .college-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .college-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .college-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .college-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .college-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .college-location {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .overall-score {
+            text-align: right;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-group {
+                justify-content: center;
+            }
+
+            .college-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">EduRank</div>
+            <div class="tagline">Comprehensive US College Rankings 2025</div>
+        </header>
+
+        <div class="controls">
+            <div class="filter-section">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search colleges by name or location...">
+                
+                <div class="filter-group">
+                    <select id="stateFilter">
+                        <option value="">All States</option>
+                    </select>
+                    
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="sort-options">
+                <button class="sort-btn active" data-sort="rank">Overall Rank</button>
+                <button class="sort-btn" data-sort="score">Overall Score</button>
+                <button class="sort-btn" data-sort="acceptance">Acceptance Rate</button>
+                <button class="sort-btn" data-sort="tuition">Tuition</button>
+                <button class="sort-btn" data-sort="graduation">Graduation Rate</button>
+            </div>
+        </div>
+
+        <div class="college-grid" id="collegeGrid">
+            <!-- Colleges will be populated here by JavaScript -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            No colleges match your current filters. Try adjusting your search criteria.
+        </div>
+    </div>
+
+    <script>
+        const colleges = [
+            {
+                rank: 1,
+                name: "Harvard University",
+                location: "Cambridge, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 98,
+                acceptanceRate: 3.4,
+                tuition: 59076,
+                graduationRate: 98,
+                studentFacultyRatio: "7:1",
+                tags: ["Ivy League", "Research University", "Liberal Arts"]
+            },
+            {
+                rank: 2,
+                name: "Stanford University",
+                location: "Stanford, CA",
+                state: "California",
+                type: "Private",
+                overallScore: 97,
+                acceptanceRate: 3.9,
+                tuition: 61731,
+                graduationRate: 95,
+                studentFacultyRatio: "5:1",
+                tags: ["Research University", "Technology", "Innovation"]
+            },
+            {
+                rank: 3,
+                name: "Massachusetts Institute of Technology",
+                location: "Cambridge, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 96,
+                acceptanceRate: 4.1,
+                tuition: 59750,
+                graduationRate: 96,
+                studentFacultyRatio: "3:1",
+                tags: ["STEM", "Research University", "Technology"]
+            },
+            {
+                rank: 4,
+                name: "Princeton University",
+                location: "Princeton, NJ",
+                state: "New Jersey",
+                type: "Private",
+                overallScore: 95,
+                acceptanceRate: 4.0,
+                tuition: 59710,
+                graduationRate: 97,
+                studentFacultyRatio: "5:1",
+                tags: ["Ivy League", "Liberal Arts", "Research University"]
+            },
+            {
+                rank: 5,
+                name: "Yale University",
+                location: "New Haven, CT",
+                state: "Connecticut",
+                type: "Private",
+                overallScore: 94,
+                acceptanceRate: 4.6,
+                tuition: 62250,
+                graduationRate: 97,
+                studentFacultyRatio: "6:1",
+                tags: ["Ivy League", "Liberal Arts", "Research University"]
+            },
+            {
+                rank: 6,
+                name: "University of California, Berkeley",
+                location: "Berkeley, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 93,
+                acceptanceRate: 14.5,
+                tuition: 14254,
+                graduationRate: 93,
+                studentFacultyRatio: "19:1",
+                tags: ["Public Ivy", "Research University", "STEM"]
+            },
+            {
+                rank: 7,
+                name: "California Institute of Technology",
+                location: "Pasadena, CA",
+                state: "California",
+                type: "Private",
+                overallScore: 92,
+                acceptanceRate: 6.4,
+                tuition: 60864,
+                graduationRate: 95,
+                studentFacultyRatio: "3:1",
+                tags: ["STEM", "Research University", "Small College"]
+            },
+            {
+                rank: 8,
+                name: "Columbia University",
+                location: "New York, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 91,
+                acceptanceRate: 3.7,
+                tuition: 63530,
+                graduationRate: 96,
+                studentFacultyRatio: "6:1",
+                tags: ["Ivy League", "Urban", "Research University"]
+            },
+            {
+                rank: 9,
+                name: "University of Chicago",
+                location: "Chicago, IL",
+                state: "Illinois",
+                type: "Private",
+                overallScore: 90,
+                acceptanceRate: 6.2,
+                tuition: 62940,
+                graduationRate: 95,
+                studentFacultyRatio: "5:1",
+                tags: ["Research University", "Liberal Arts", "Economics"]
+            },
+            {
+                rank: 10,
+                name: "Johns Hopkins University",
+                location: "Baltimore, MD",
+                state: "Maryland",
+                type: "Private",
+                overallScore: 89,
+                acceptanceRate: 7.5,
+                tuition: 60480,
+                graduationRate: 94,
+                studentFacultyRatio: "7:1",
+                tags: ["Research University", "Medical School", "STEM"]
+            },
+            {
+                rank: 11,
+                name: "University of Pennsylvania",
+                location: "Philadelphia, PA",
+                state: "Pennsylvania",
+                type: "Private",
+                overallScore: 88,
+                acceptanceRate: 5.9,
+                tuition: 61710,
+                graduationRate: 96,
+                studentFacultyRatio: "6:1",
+                tags: ["Ivy League", "Business School", "Urban"]
+            },
+            {
+                rank: 12,
+                name: "Duke University",
+                location: "Durham, NC",
+                state: "North Carolina",
+                type: "Private",
+                overallScore: 87,
+                acceptanceRate: 6.2,
+                tuition: 62688,
+                graduationRate: 96,
+                studentFacultyRatio: "6:1",
+                tags: ["Research University", "Athletics", "Southern"]
+            },
+            {
+                rank: 13,
+                name: "Northwestern University",
+                location: "Evanston, IL",
+                state: "Illinois",
+                type: "Private",
+                overallScore: 86,
+                acceptanceRate: 7.0,
+                tuition: 61900,
+                graduationRate: 94,
+                studentFacultyRatio: "6:1",
+                tags: ["Research University", "Journalism", "Business"]
+            },
+            {
+                rank: 14,
+                name: "University of California, Los Angeles",
+                location: "Los Angeles, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 85,
+                acceptanceRate: 10.8,
+                tuition: 13804,
+                graduationRate: 91,
+                studentFacultyRatio: "18:1",
+                tags: ["Public Ivy", "Athletics", "Film School"]
+            },
+            {
+                rank: 15,
+                name: "Cornell University",
+                location: "Ithaca, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 84,
+                acceptanceRate: 8.7,
+                tuition: 62456,
+                graduationRate: 95,
+                studentFacultyRatio: "9:1",
+                tags: ["Ivy League", "Agriculture", "Engineering"]
+            },
+            {
+                rank: 16,
+                name: "University of Michigan",
+                location: "Ann Arbor, MI",
+                state: "Michigan",
+                type: "Public",
+                overallScore: 83,
+                acceptanceRate: 18.9,
+                tuition: 16408,
+                graduationRate: 93,
+                studentFacultyRatio: "15:1",
+                tags: ["Public Ivy", "Athletics", "Business School"]
+            },
+            {
+                rank: 17,
+                name: "Carnegie Mellon University",
+                location: "Pittsburgh, PA",
+                state: "Pennsylvania",
+                type: "Private",
+                overallScore: 82,
+                acceptanceRate: 13.3,
+                tuition: 60665,
+                graduationRate: 91,
+                studentFacultyRatio: "10:1",
+                tags: ["Computer Science", "Engineering", "Drama"]
+            },
+            {
+                rank: 18,
+                name: "University of Virginia",
+                location: "Charlottesville, VA",
+                state: "Virginia",
+                type: "Public",
+                overallScore: 81,
+                acceptanceRate: 21.0,
+                tuition: 19698,
+                graduationRate: 95,
+                studentFacultyRatio: "14:1",
+                tags: ["Public Ivy", "Historic", "Business School"]
+            },
+            {
+                rank: 19,
+                name: "Vanderbilt University",
+                location: "Nashville, TN",
+                state: "Tennessee",
+                type: "Private",
+                overallScore: 80,
+                acceptanceRate: 6.7,
+                tuition: 58130,
+                graduationRate: 93,
+                studentFacultyRatio: "7:1",
+                tags: ["Research University", "Music", "Southern"]
+            },
+            {
+                rank: 20,
+                name: "Rice University",
+                location: "Houston, TX",
+                state: "Texas",
+                type: "Private",
+                overallScore: 79,
+                acceptanceRate: 8.7,
+                tuition: 54960,
+                graduationRate: 94,
+                studentFacultyRatio: "6:1",
+                tags: ["Small College", "Engineering", "Research University"]
+            },
+            {
+                rank: 21,
+                name: "Washington University in St. Louis",
+                location: "St. Louis, MO",
+                state: "Missouri",
+                type: "Private",
+                overallScore: 78,
+                acceptanceRate: 11.7,
+                tuition: 60590,
+                graduationRate: 94,
+                studentFacultyRatio: "7:1",
+                tags: ["Research University", "Medical School", "Liberal Arts"]
+            },
+            {
+                rank: 22,
+                name: "Georgetown University",
+                location: "Washington, DC",
+                state: "District of Columbia",
+                type: "Private",
+                overallScore: 77,
+                acceptanceRate: 12.2,
+                tuition: 61816,
+                graduationRate: 95,
+                studentFacultyRatio: "11:1",
+                tags: ["Jesuit", "International Relations", "Business"]
+            },
+            {
+                rank: 23,
+                name: "University of California, San Diego",
+                location: "La Jolla, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 76,
+                acceptanceRate: 23.7,
+                tuition: 14648,
+                graduationRate: 89,
+                studentFacultyRatio: "19:1",
+                tags: ["Public Research", "STEM", "Medicine"]
+            },
+            {
+                rank: 24,
+                name: "Emory University",
+                location: "Atlanta, GA",
+                state: "Georgia",
+                type: "Private",
+                overallScore: 75,
+                acceptanceRate: 13.0,
+                tuition: 57948,
+                graduationRate: 92,
+                studentFacultyRatio: "9:1",
+                tags: ["Research University", "Medical School", "Business"]
+            },
+            {
+                rank: 25,
+                name: "University of Southern California",
+                location: "Los Angeles, CA",
+                state: "California",
+                type: "Private",
+                overallScore: 74,
+                acceptanceRate: 11.4,
+                tuition: 63468,
+                graduationRate: 92,
+                studentFacultyRatio: "9:1",
+                tags: ["Film School", "Business", "Engineering"]
+            },
+            {
+                rank: 26,
+                name: "University of North Carolina at Chapel Hill",
+                location: "Chapel Hill, NC",
+                state: "North Carolina",
+                type: "Public",
+                overallScore: 73,
+                acceptanceRate: 16.8,
+                tuition: 11100,
+                graduationRate: 91,
+                studentFacultyRatio: "13:1",
+                tags: ["Public Ivy", "Journalism", "Business"]
+            },
+            {
+                rank: 27,
+                name: "New York University",
+                location: "New York, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 72,
+                acceptanceRate: 12.8,
+                tuition: 58168,
+                graduationRate: 87,
+                studentFacultyRatio: "8:1",
+                tags: ["Urban", "Arts", "Business"]
+            },
+            {
+                rank: 28,
+                name: "Tufts University",
+                location: "Medford, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 71,
+                acceptanceRate: 9.7,
+                tuition: 63804,
+                graduationRate: 93,
+                studentFacultyRatio: "9:1",
+                tags: ["Liberal Arts", "International Relations", "Medical School"]
+            },
+            {
+                rank: 29,
+                name: "University of California, Santa Barbara",
+                location: "Santa Barbara, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 70,
+                acceptanceRate: 25.9,
+                tuition: 14391,
+                graduationRate: 85,
+                studentFacultyRatio: "22:1",
+                tags: ["Public Research", "Beach Campus", "Party School"]
+            },
+            {
+                rank: 30,
+                name: "University of Florida",
+                location: "Gainesville, FL",
+                state: "Florida",
+                type: "Public",
+                overallScore: 69,
+                acceptanceRate: 23.4,
+                tuition: 6381,
+                graduationRate: 90,
+                studentFacultyRatio: "18:1",
+                tags: ["Public Research", "Athletics", "Business"]
+            },
+            {
+                rank: 31,
+                name: "Wake Forest University",
+                location: "Winston-Salem, NC",
+                state: "North Carolina",
+                type: "Private",
+                overallScore: 68,
+                acceptanceRate: 22.0,
+                tuition: 62128,
+                graduationRate: 89,
+                studentFacultyRatio: "10:1",
+                tags: ["Liberal Arts", "Business", "Small College"]
+            },
+            {
+                rank: 32,
+                name: "University of Rochester",
+                location: "Rochester, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 67,
+                acceptanceRate: 29.0,
+                tuition: 61878,
+                graduationRate: 87,
+                studentFacultyRatio: "10:1",
+                tags: ["Research University", "Music", "Engineering"]
+            },
+            {
+                rank: 33,
+                name: "Boston College",
+                location: "Chestnut Hill, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 66,
+                acceptanceRate: 16.7,
+                tuition: 62950,
+                graduationRate: 95,
+                studentFacultyRatio: "11:1",
+                tags: ["Jesuit", "Business", "Athletics"]
+            },
+            {
+                rank: 34,
+                name: "Georgia Institute of Technology",
+                location: "Atlanta, GA",
+                state: "Georgia",
+                type: "Public",
+                overallScore: 65,
+                acceptanceRate: 17.1,
+                tuition: 12852,
+                graduationRate: 93,
+                studentFacultyRatio: "22:1",
+                tags: ["STEM", "Engineering", "Technology"]
+            },
+            {
+                rank: 35,
+                name: "University of California, Irvine",
+                location: "Irvine, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 64,
+                acceptanceRate: 21.3,
+                tuition: 15516,
+                graduationRate: 87,
+                studentFacultyRatio: "18:1",
+                tags: ["Public Research", "STEM", "Diverse"]
+            },
+            {
+                rank: 36,
+                name: "University of California, Davis",
+                location: "Davis, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 63,
+                acceptanceRate: 38.9,
+                tuition: 14722,
+                graduationRate: 87,
+                studentFacultyRatio: "20:1",
+                tags: ["Agriculture", "Veterinary", "Public Research"]
+            },
+            {
+                rank: 37,
+                name: "Case Western Reserve University",
+                location: "Cleveland, OH",
+                state: "Ohio",
+                type: "Private",
+                overallScore: 62,
+                acceptanceRate: 27.0,
+                tuition: 61040,
+                graduationRate: 85,
+                studentFacultyRatio: "11:1",
+                tags: ["Research University", "Engineering", "Medical School"]
+            },
+            {
+                rank: 38,
+                name: "Boston University",
+                location: "Boston, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 61,
+                acceptanceRate: 14.4,
+                tuition: 62360,
+                graduationRate: 88,
+                studentFacultyRatio: "10:1",
+                tags: ["Urban", "Communications", "Business"]
+            },
+            {
+                rank: 39,
+                name: "Brandeis University",
+                location: "Waltham, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 60,
+                acceptanceRate: 31.0,
+                tuition: 61816,
+                graduationRate: 92,
+                studentFacultyRatio: "10:1",
+                tags: ["Liberal Arts", "Research University", "Jewish Heritage"]
+            },
+            {
+                rank: 40,
+                name: "Tulane University",
+                location: "New Orleans, LA",
+                state: "Louisiana",
+                type: "Private",
+                overallScore: 59,
+                acceptanceRate: 11.5,
+                tuition: 58666,
+                graduationRate: 87,
+                studentFacultyRatio: "8:1",
+                tags: ["Liberal Arts", "Business", "Southern"]
+            },
+            {
+                rank: 41,
+                name: "University of Wisconsin-Madison",
+                location: "Madison, WI",
+                state: "Wisconsin",
+                type: "Public",
+                overallScore: 58,
+                acceptanceRate: 49.1,
+                tuition: 10796,
+                graduationRate: 88,
+                studentFacultyRatio: "17:1",
+                tags: ["Public Ivy", "Research University", "Agriculture"]
+            },
+            {
+                rank: 42,
+                name: "University of Texas at Austin",
+                location: "Austin, TX",
+                state: "Texas",
+                type: "Public",
+                overallScore: 57,
+                acceptanceRate: 29.0,
+                tuition: 11448,
+                graduationRate: 87,
+                studentFacultyRatio: "18:1",
+                tags: ["Public Research", "Business", "Music"]
+            },
+            {
+                rank: 43,
+                name: "University of Illinois Urbana-Champaign",
+                location: "Champaign, IL",
+                state: "Illinois",
+                type: "Public",
+                overallScore: 56,
+                acceptanceRate: 44.8,
+                tuition: 16004,
+                graduationRate: 85,
+                studentFacultyRatio: "20:1",
+                tags: ["Public Research", "Engineering", "Computer Science"]
+            },
+            {
+                rank: 44,
+                name: "Northeastern University",
+                location: "Boston, MA",
+                state: "Massachusetts",
+                type: "Private",
+                overallScore: 55,
+                acceptanceRate: 6.8,
+                tuition: 59100,
+                graduationRate: 90,
+                studentFacultyRatio: "14:1",
+                tags: ["Co-op Program", "Business", "Urban"]
+            },
+            {
+                rank: 45,
+                name: "University of Georgia",
+                location: "Athens, GA",
+                state: "Georgia",
+                type: "Public",
+                overallScore: 54,
+                acceptanceRate: 42.5,
+                tuition: 12080,
+                graduationRate: 87,
+                studentFacultyRatio: "17:1",
+                tags: ["Public Research", "Business", "Journalism"]
+            },
+            {
+                rank: 46,
+                name: "Pepperdine University",
+                location: "Malibu, CA",
+                state: "California",
+                type: "Private",
+                overallScore: 53,
+                acceptanceRate: 30.6,
+                tuition: 60816,
+                graduationRate: 84,
+                studentFacultyRatio: "13:1",
+                tags: ["Christian", "Beach Campus", "Business"]
+            },
+            {
+                rank: 47,
+                name: "Villanova University",
+                location: "Villanova, PA",
+                state: "Pennsylvania",
+                type: "Private",
+                overallScore: 52,
+                acceptanceRate: 25.2,
+                tuition: 62773,
+                graduationRate: 94,
+                studentFacultyRatio: "12:1",
+                tags: ["Catholic", "Business", "Engineering"]
+            },
+            {
+                rank: 48,
+                name: "Lehigh University",
+                location: "Bethlehem, PA",
+                state: "Pennsylvania",
+                type: "Private",
+                overallScore: 51,
+                acceptanceRate: 32.0,
+                tuition: 58890,
+                graduationRate: 91,
+                studentFacultyRatio: "9:1",
+                tags: ["Engineering", "Business", "Liberal Arts"]
+            },
+            {
+                rank: 49,
+                name: "University of Miami",
+                location: "Coral Gables, FL",
+                state: "Florida",
+                type: "Private",
+                overallScore: 50,
+                acceptanceRate: 19.0,
+                tuition: 58104,
+                graduationRate: 84,
+                studentFacultyRatio: "12:1",
+                tags: ["Business", "Marine Science", "Communications"]
+            },
+            {
+                rank: 50,
+                name: "Ohio State University",
+                location: "Columbus, OH",
+                state: "Ohio",
+                type: "Public",
+                overallScore: 49,
+                acceptanceRate: 57.0,
+                tuition: 11936,
+                graduationRate: 84,
+                studentFacultyRatio: "19:1",
+                tags: ["Large University", "Athletics", "Research"]
+            },
+            {
+                rank: 51,
+                name: "Penn State University",
+                location: "University Park, PA",
+                state: "Pennsylvania",
+                type: "Public",
+                overallScore: 48,
+                acceptanceRate: 54.0,
+                tuition: 18898,
+                graduationRate: 86,
+                studentFacultyRatio: "15:1",
+                tags: ["Large University", "Athletics", "Engineering"]
+            },
+            {
+                rank: 52,
+                name: "University of Washington",
+                location: "Seattle, WA",
+                state: "Washington",
+                type: "Public",
+                overallScore: 47,
+                acceptanceRate: 48.0,
+                tuition: 12242,
+                graduationRate: 85,
+                studentFacultyRatio: "21:1",
+                tags: ["Public Research", "Medicine", "Technology"]
+            },
+            {
+                rank: 53,
+                name: "Florida State University",
+                location: "Tallahassee, FL",
+                state: "Florida",
+                type: "Public",
+                overallScore: 46,
+                acceptanceRate: 25.0,
+                tuition: 6516,
+                graduationRate: 82,
+                studentFacultyRatio: "21:1",
+                tags: ["Athletics", "Film School", "Party School"]
+            },
+            {
+                rank: 54,
+                name: "University of Maryland",
+                location: "College Park, MD",
+                state: "Maryland",
+                type: "Public",
+                overallScore: 45,
+                acceptanceRate: 44.2,
+                tuition: 10779,
+                graduationRate: 87,
+                studentFacultyRatio: "18:1",
+                tags: ["Public Research", "Engineering", "Business"]
+            },
+            {
+                rank: 55,
+                name: "Rensselaer Polytechnic Institute",
+                location: "Troy, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 44,
+                acceptanceRate: 43.0,
+                tuition: 58600,
+                graduationRate: 86,
+                studentFacultyRatio: "13:1",
+                tags: ["STEM", "Engineering", "Technology"]
+            },
+            {
+                rank: 56,
+                name: "University of Pittsburgh",
+                location: "Pittsburgh, PA",
+                state: "Pennsylvania",
+                type: "Public",
+                overallScore: 43,
+                acceptanceRate: 67.0,
+                tuition: 21432,
+                graduationRate: 82,
+                studentFacultyRatio: "14:1",
+                tags: ["Public Research", "Medical School", "Urban"]
+            },
+            {
+                rank: 57,
+                name: "Syracuse University",
+                location: "Syracuse, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 42,
+                acceptanceRate: 44.0,
+                tuition: 58440,
+                graduationRate: 83,
+                studentFacultyRatio: "15:1",
+                tags: ["Communications", "Business", "Athletics"]
+            },
+            {
+                rank: 58,
+                name: "Purdue University",
+                location: "West Lafayette, IN",
+                state: "Indiana",
+                type: "Public",
+                overallScore: 41,
+                acceptanceRate: 50.0,
+                tuition: 9992,
+                graduationRate: 82,
+                studentFacultyRatio: "13:1",
+                tags: ["Engineering", "Aviation", "Agriculture"]
+            },
+            {
+                rank: 59,
+                name: "University of Connecticut",
+                location: "Storrs, CT",
+                state: "Connecticut",
+                type: "Public",
+                overallScore: 40,
+                acceptanceRate: 56.0,
+                tuition: 18434,
+                graduationRate: 83,
+                studentFacultyRatio: "16:1",
+                tags: ["Public Research", "Business", "Athletics"]
+            },
+            {
+                rank: 60,
+                name: "Southern Methodist University",
+                location: "Dallas, TX",
+                state: "Texas",
+                type: "Private",
+                overallScore: 39,
+                acceptanceRate: 47.0,
+                tuition: 60410,
+                graduationRate: 82,
+                studentFacultyRatio: "11:1",
+                tags: ["Business", "Methodist", "Liberal Arts"]
+            },
+            {
+                rank: 61,
+                name: "University of California, Riverside",
+                location: "Riverside, CA",
+                state: "California",
+                type: "Public",
+                overallScore: 38,
+                acceptanceRate: 66.0,
+                tuition: 13781,
+                graduationRate: 77,
+                studentFacultyRatio: "23:1",
+                tags: ["Public Research", "Diverse", "Agriculture"]
+            },
+            {
+                rank: 62,
+                name: "University of Massachusetts Amherst",
+                location: "Amherst, MA",
+                state: "Massachusetts",
+                type: "Public",
+                overallScore: 37,
+                acceptanceRate: 64.0,
+                tuition: 16439,
+                graduationRate: 81,
+                studentFacultyRatio: "17:1",
+                tags: ["Public Research", "Engineering", "Business"]
+            },
+            {
+                rank: 63,
+                name: "Clemson University",
+                location: "Clemson, SC",
+                state: "South Carolina",
+                type: "Public",
+                overallScore: 36,
+                acceptanceRate: 43.0,
+                tuition: 15558,
+                graduationRate: 83,
+                studentFacultyRatio: "14:1",
+                tags: ["Athletics", "Engineering", "Southern"]
+            },
+            {
+                rank: 64,
+                name: "George Washington University",
+                location: "Washington, DC",
+                state: "District of Columbia",
+                type: "Private",
+                overallScore: 35,
+                acceptanceRate: 41.0,
+                tuition: 59870,
+                graduationRate: 87,
+                studentFacultyRatio: "13:1",
+                tags: ["Political Science", "International Relations", "Urban"]
+            },
+            {
+                rank: 65,
+                name: "University of Minnesota",
+                location: "Minneapolis, MN",
+                state: "Minnesota",
+                type: "Public",
+                overallScore: 34,
+                acceptanceRate: 75.0,
+                tuition: 15254,
+                graduationRate: 80,
+                studentFacultyRatio: "17:1",
+                tags: ["Large University", "Research", "Medicine"]
+            },
+            {
+                rank: 66,
+                name: "Fordham University",
+                location: "Bronx, NY",
+                state: "New York",
+                type: "Private",
+                overallScore: 33,
+                acceptanceRate: 46.0,
+                tuition: 58081,
+                graduationRate: 85,
+                studentFacultyRatio: "14:1",
+                tags: ["Jesuit", "Business", "Liberal Arts"]
+            },
+            {
+                rank: 67,
+                name: "Virginia Tech",
+                location: "Blacksburg, VA",
+                state: "Virginia",
+                type: "Public",
+                overallScore: 32,
+                acceptanceRate: 57.0,
+                tuition: 14708,
+                graduationRate: 86,
+                studentFacultyRatio: "14:1",
+                tags: ["Engineering", "Architecture", "Athletics"]
+            },
+            {
+                rank: 68,
+                name: "University of Iowa",
+                location: "Iowa City, IA",
+                state: "Iowa",
+                type: "Public",
+                overallScore: 31,
+                acceptanceRate: 86.0,
+                tuition: 9830,
+                graduationRate: 73,
+                studentFacultyRatio: "16:1",
+                tags: ["Writers' Workshop", "Medicine", "Public Research"]
+            },
+            {
+                rank: 69,
+                name: "Texas A&M University",
+                location: "College Station, TX",
+                state: "Texas",
+                type: "Public",
+                overallScore: 30,
+                acceptanceRate: 63.0,
+                tuition: 12413,
+                graduationRate: 81,
+                studentFacultyRatio: "20:1",
+                tags: ["Engineering", "Agriculture", "Military"]
+            },
+            {
+                rank: 70,
+                name: "American University",
+                location: "Washington, DC",
+                state: "District of Columbia",
+                type: "Private",
+                overallScore: 29,
+                acceptanceRate: 36.0,
+                tuition: 53005,
+                graduationRate: 85,
+                studentFacultyRatio: "12:1",
+                tags: ["Political Science", "International Studies", "Communications"]
+            },
+            {
+                rank: 71,
+                name: "Indiana University Bloomington",
+                location: "Bloomington, IN",
+                state: "Indiana",
+                type: "Public",
+                overallScore: 28,
+                acceptanceRate: 78.0,
+                tuition: 11334,
+                graduationRate: 78,
+                studentFacultyRatio: "16:1",
+                tags: ["Business", "Music", "Public Affairs"]
+            },
+            {
+                rank: 72,
+                name: "Michigan State University",
+                location: "East Lansing, MI",
+                state: "Michigan",
+                type: "Public",
+                overallScore: 27,
+                acceptanceRate: 76.0,
+                tuition: 15372,
+                graduationRate: 81,
+                studentFacultyRatio: "16:1",
+                tags: ["Athletics", "Agriculture", "Large University"]
+            },
+            {
+                rank: 73,
+                name: "Baylor University",
+                location: "Waco, TX",
+                state: "Texas",
+                type: "Private",
+                overallScore: 26,
+                acceptanceRate: 45.0,
+                tuition: 50232,
+                graduationRate: 79,
+                studentFacultyRatio: "15:1",
+                tags: ["Baptist", "Business", "Athletics"]
+            },
+            {
+                rank: 74,
+                name: "University of Delaware",
+                location: "Newark, DE",
+                state: "Delaware",
+                type: "Public",
+                overallScore: 25,
+                acceptanceRate: 66.0,
+                tuition: 14720,
+                graduationRate: 83,
+                studentFacultyRatio: "15:1",
+                tags: ["Public Research", "Business", "Engineering"]
+            },
+            {
+                rank: 75,
+                name: "University of Denver",
+                location: "Denver, CO",
+                state: "Colorado",
+                type: "Private",
+                overallScore: 24,
+                acceptanceRate: 58.0,
+                tuition: 54711,
+                graduationRate: 78,
+                studentFacultyRatio: "11:1",
+                tags: ["Business", "International Studies", "Liberal Arts"]
+            },
+            {
+                rank: 76,
+                name: "Stevens Institute of Technology",
+                location: "Hoboken, NJ",
+                state: "New Jersey",
+                type: "Private",
+                overallScore: 23,
+                acceptanceRate: 40.0,
+                tuition: 56920,
+                graduationRate: 86,
+                studentFacultyRatio: "10:1",
+                tags: ["STEM", "Engineering", "Technology"]
+            },
+            {
+                rank: 77,
+                name: "Marquette University",
+                location: "Milwaukee, WI",
+                state: "Wisconsin",
+                type: "Private",
+                overallScore: 22,
+                acceptanceRate: 82.0,
+                tuition: 48710,
+                graduationRate: 83,
+                studentFacultyRatio: "14:1",
+                tags: ["Jesuit", "Engineering", "Business"]
+            },
+            {
+                rank: 78,
+                name: "University of Vermont",
+                location: "Burlington, VT",
+                state: "Vermont",
+                type: "Public",
+                overallScore: 21,
+                acceptanceRate: 67.0,
+                tuition: 18890,
+                graduationRate: 78,
+                studentFacultyRatio: "17:1",
+                tags: ["Liberal Arts", "Environmental Studies", "Medicine"]
+            },
+            {
+                rank: 79,
+                name: "University of San Diego",
+                location: "San Diego, CA",
+                state: "California",
+                type: "Private",
+                overallScore: 20,
+                acceptanceRate: 45.0,
+                tuition: 55708,
+                graduationRate: 81,
+                studentFacultyRatio: "14:1",
+                tags: ["Catholic", "Business", "Beach Campus"]
+            },
+            {
+                rank: 80,
+                name: "University of Alabama",
+                location: "Tuscaloosa, AL",
+                state: "Alabama",
+                type: "Public",
+                overallScore: 19,
+                acceptanceRate: 83.0,
+                tuition: 11100,
+                graduationRate: 68,
+                studentFacultyRatio: "20:1",
+                tags: ["Athletics", "Business", "Southern"]
+            }
+        ];
+
+        let filteredColleges = [...colleges];
+        let currentSort = 'rank';
+
+        function renderColleges() {
+            const grid = document.getElementById('collegeGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredColleges.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            grid.innerHTML = filteredColleges.map(college => `
+                <div class="college-card">
+                    <div class="rank-badge">#${college.rank}</div>
+                    <div class="college-header">
+                        <div>
+                            <div class="college-name">${college.name}</div>
+                            <div class="college-location">${college.location}</div>
+                        </div>
+                        <div class="overall-score">
+                            <div class="score-value">${college.overallScore}</div>
+                            <div class="score-label">Overall Score</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">${college.acceptanceRate}%</div>
+                            <div class="stat-label">Acceptance Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$${college.tuition.toLocaleString()}</div>
+                            <div class="stat-label">Annual Tuition</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${college.graduationRate}%</div>
+                            <div class="stat-label">Graduation Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${college.studentFacultyRatio}</div>
+                            <div class="stat-label">Student:Faculty</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tags">
+                        ${college.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sortColleges(sortBy) {
+            currentSort = sortBy;
+            
+            filteredColleges.sort((a, b) => {
+                switch (sortBy) {
+                    case 'rank':
+                        return a.rank - b.rank;
+                    case 'score':
+                        return b.overallScore - a.overallScore;
+                    case 'acceptance':
+                        return a.acceptanceRate - b.acceptanceRate;
+                    case 'tuition':
+                        return a.tuition - b.tuition;
+                    case 'graduation':
+                        return b.graduationRate - a.graduationRate;
+                    default:
+                        return a.rank - b.rank;
+                }
+            });
+            
+            renderColleges();
+        }
+
+        function filterColleges() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const stateFilter = document.getElementById('stateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            filteredColleges = colleges.filter(college => {
+                const matchesSearch = college.name.toLowerCase().includes(searchTerm) || 
+                                    college.location.toLowerCase().includes(searchTerm);
+                const matchesState = !stateFilter || college.state === stateFilter;
+                const matchesType = !typeFilter || college.type === typeFilter;
+                
+                return matchesSearch && matchesState && matchesType;
+            });
+            
+            sortColleges(currentSort);
+        }
+
+        // Initialize
+        function init() {
+            // Populate state filter
+            const states = [...new Set(colleges.map(c => c.state))].sort();
+            const stateSelect = document.getElementById('stateFilter');
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+            
+            // Event listeners
+            document.getElementById('searchBox').addEventListener('input', filterColleges);
+            document.getElementById('stateFilter').addEventListener('change', filterColleges);
+            document.getElementById('typeFilter').addEventListener('change', filterColleges);
+            
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    sortColleges(e.target.dataset.sort);
+                });
+            });
+            
+            // Initial render
+            renderColleges();
+        }
+
+        init();
+    </script>
+</body>
+</html>
