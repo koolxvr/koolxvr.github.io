@@ -1,140 +1,249 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Xavier's Newhouse 2 Guideline - VR Hotspot Experience</title>
-    <meta name="description" content="Interactive VR Hotspot Experience" />
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  
-  <body>
-    <div id="project-info">
-      <h1>Xavier's Newhouse 2 Guideline</h1>
-      <p>Interactive VR Experience • Click on hotspots to explore</p>
-    </div>
-
-    <!-- Global Sound Control -->
-    <div id="global-sound-control">
-      <button id="global-sound-toggle" class="sound-btn">🔊 Sound: ON</button>
-      <div id="audio-progress-container" class="audio-progress-container" style="display: none;">
-        <div class="audio-info">
-          <span id="current-time">0:00</span>
-          <div class="progress-bar-container">
-            <div class="progress-bar" id="progress-bar">
-              <div class="progress-fill" id="progress-fill"></div>
-              <div class="progress-handle" id="progress-handle"></div>
-            </div>
-          </div>
-          <span id="total-time">0:00</span>
-        </div>
-      </div>
-    </div>
-
-    <a-scene background="color: #1a1a2e" id="main-scene">
-      <a-entity
-        laser-controls="hand: right"
-        raycaster="objects: .clickable, .audio-control"
-      ></a-entity>
-      <a-entity
-        laser-controls="hand: left"
-        raycaster="objects: .clickable, .audio-control"
-      ></a-entity>
-
-      <a-assets>
-        <img id="main-panorama" src="./images/scene1.jpg" />
-        <img id="hotspot" src="./images/up-arrow.png" />
-        <audio id="default-audio" src="./audio/music.mp3"></audio>
-        <img id="close" src="./images/close.png" />
-        <img id="play" src="./images/play.png" />
-        <img id="pause" src="./images/pause.png" />
-      </a-assets>
-
-      <a-entity id="hotspot-container"></a-entity>
-      
-      <!-- Initial loading environment -->
-      <a-entity id="loading-environment" visible="true">
-        <!-- Starfield background -->
-        <a-entity position="0 0 0">
-          <a-entity geometry="primitive: sphere; radius: 100" 
-                   material="color: #0f0f23; transparent: true; opacity: 0.8"></a-entity>
-        </a-entity>
-        
-        <!-- Floating orbs for visual interest -->
-        <a-entity id="loading-orb-1" 
-                 geometry="primitive: sphere; radius: 0.3" 
-                 material="color: #4CAF50; emissive: #4CAF50; emissiveIntensity: 0.5"
-                 position="3 2 -5"
-                 animation="property: rotation; to: 360 360 0; dur: 8000; easing: linear; loop: true">
-        </a-entity>
-        
-        <a-entity id="loading-orb-2" 
-                 geometry="primitive: sphere; radius: 0.2" 
-                 material="color: #2196F3; emissive: #2196F3; emissiveIntensity: 0.4"
-                 position="-4 1 -3"
-                 animation="property: rotation; to: -360 180 360; dur: 6000; easing: linear; loop: true">
-        </a-entity>
-        
-        <a-entity id="loading-orb-3" 
-                 geometry="primitive: sphere; radius: 0.15" 
-                 material="color: #FF9800; emissive: #FF9800; emissiveIntensity: 0.3"
-                 position="2 -1 -4"
-                 animation="property: rotation; to: 180 -360 180; dur: 10000; easing: linear; loop: true">
-        </a-entity>
-        
-        <!-- Central loading text -->
-        <a-text id="loading-text" 
-               value="Loading VR Experience..." 
-               position="0 0 -3" 
-               align="center" 
-               color="#FFFFFF"
-               font="dejavu"
-               width="4"
-               animation="property: rotation; to: 0 5 0; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate"
-               animation__fade="property: material.opacity; from: 0.5; to: 1; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate">
-        </a-text>
-        
-        <!-- Animated loading dots -->
-        <a-text id="loading-dots" 
-               value="●○○" 
-               position="0 -0.5 -3" 
-               align="center" 
-               color="#4CAF50"
-               font="dejavu"
-               width="2"
-               animation__dots="property: material.opacity; to: 0.3; dur: 800; easing: easeInOutSine; loop: true; dir: alternate">
-        </a-text>
-      </a-entity>
-      
-      <!-- Actual scene skybox - initially hidden -->
-      <a-sky id="skybox" src="#main-panorama" visible="false"></a-sky>
-
-      <a-entity id="cam" camera position="0 1.6 0" look-controls>
-        <!-- Mouse-based cursor for non-VR mode -->
-        <a-entity 
-          cursor="rayOrigin: mouse; fuse: false"
-          raycaster="objects: .clickable, .audio-control"
-          id="mouse-cursor">
-        </a-entity>
-        
-        <!-- Gaze-based cursor for VR mode -->
-        <a-entity
-          cursor="fuse: true; fuseTimeout: 1500"
-          raycaster="objects: .clickable, .audio-control"
-          position="0 0 -1"
-          geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"
-          material="color: white; shader: flat; opacity: 0.8"
-          id="gaze-cursor"
-          visible="false"
-          animation__mouseenter="property: geometry.radiusOuter; to: 0.015; startEvents: mouseenter; dur: 1500; easing: easeInQuad"
-          animation__mouseleave="property: geometry.radiusOuter; to: 0.01; startEvents: mouseleave; dur: 300; easing: easeOutQuad"
-          animation__click="property: scale; to: 1.2 1.2 1.2; startEvents: click; dur: 150; easing: easeInOutQuad"
-          animation__fusing="property: scale; to: 1.2 1.2 1.2; startEvents: fusing; dur: 1500; easing: easeInQuad"
-          animation__fusecomplete="property: scale; to: 1 1 1; startEvents: click; dur: 150; easing: easeOutQuad">
-        </a-entity>
-      </a-entity>
-    </a-scene>
-  </body>
-</html>
+{
+  "name": "XavierNewhouse2Guide",
+  "created": "2025-10-08T20:26:48.514Z",
+  "scenes": {
+    "room1": {
+      "name": "Room 1",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/1-20250915_1757969509532.jpg",
+      "hotspots": [
+        {
+          "id": 4,
+          "type": "navigation",
+          "position": "6.88 -0.18 -2.40",
+          "text": "",
+          "scene": "room1",
+          "navigationTarget": "scene_1758141193392",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    },
+    "scene_1758141193392": {
+      "name": "Waverly Ave",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/1-20250915_1757969509532.jpg",
+      "hotspots": [
+        {
+          "id": 7,
+          "type": "navigation",
+          "position": "7.36 1.53 -1.42",
+          "text": "",
+          "scene": "scene_1758141193392",
+          "navigationTarget": "scene_1758141820907",
+          "audio": null
+        },
+        {
+          "id": 11,
+          "type": "text-audio",
+          "position": "6.24 1.48 -4.17",
+          "text": "Listen to Syracuse University's busiest afternoon intersection",
+          "scene": "scene_1758141193392",
+          "navigationTarget": null,
+          "audio": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Madelyn%20Woodson/audio/Inside-Audio_1757968037498.mp3"
+        },
+        {
+          "id": 28,
+          "type": "navigation",
+          "position": "-6.88 -0.18 2.40",
+          "text": "",
+          "scene": "scene_1758141193392",
+          "navigationTarget": "room1",
+          "audio": null
+        }
+      ],
+      "startingPoint": {
+        "rotation": {
+          "x": 1.8334649444186495,
+          "y": -99.80924791178904,
+          "z": 0
+        }
+      },
+      "globalSound": null
+    },
+    "scene_1758141820907": {
+      "name": "Syracuse University Logo",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/2-20250915_1757969514872.jpg",
+      "hotspots": [
+        {
+          "id": 8,
+          "type": "navigation",
+          "position": "1.59 1.41 7.33",
+          "text": "",
+          "scene": "scene_1758141820907",
+          "navigationTarget": "scene_1758142084180",
+          "audio": null
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "position": "2.16 2.88 7.06",
+          "text": "This is Newhouse 2",
+          "scene": "scene_1758141820907",
+          "navigationTarget": null,
+          "audio": null
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "position": "7.45 1.50 0.82",
+          "text": "Located at the intersection of University Avenue and Waverly Avenue, this entrance sign welcomes visitors to Syracuse University before they reach the iconic Main Gate Arch. The sleek stone wall with the university's orange "S" logo marks the official start of campus and serves as a favorite photo spot for students and alumni. It represents the gateway to academic life, where the city meets the university.",
+          "scene": "scene_1758141820907",
+          "navigationTarget": null,
+          "audio": null,
+          "popupWidth": 5.5,
+          "popupHeight": 2.5
+        },
+        {
+          "id": 27,
+          "type": "navigation",
+          "position": "-6.85 1.13 3.02",
+          "text": "",
+          "scene": "scene_1758141820907",
+          "navigationTarget": "scene_1758141193392",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    },
+    "scene_1758142084180": {
+      "name": "Newhouse 2 East Gate",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/3-20250915_1757969520729.jpg",
+      "hotspots": [
+        {
+          "id": 19,
+          "type": "text",
+          "position": "6.35 2.58 3.87",
+          "text": "Newhouse 2 is the second building of the S.I. Newhouse School of Public Communications at Syracuse University. Designed by world-famous architect I.M. Pei and opened in 1974, the building features a modern style of concrete and glass that reflects the school's spirit of innovation. It houses classrooms, broadcast studios, and editing labs where students learn journalism, advertising, and public relations. Connected to Newhouse 1 and Newhouse 3, it forms the center of Syracuse's media education community.",
+          "scene": "scene_1758142084180",
+          "navigationTarget": null,
+          "audio": null,
+          "popupWidth": 6,
+          "popupHeight": 3
+        },
+        {
+          "id": 20,
+          "type": "navigation",
+          "position": "7.42 1.73 1.08",
+          "text": "",
+          "scene": "scene_1758142084180",
+          "navigationTarget": "scene_1758142345201",
+          "audio": null
+        },
+        {
+          "id": 26,
+          "type": "navigation",
+          "position": "-3.59 1.63 -6.59",
+          "text": "",
+          "scene": "scene_1758142084180",
+          "navigationTarget": "scene_1758141820907",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    },
+    "scene_1758142345201": {
+      "name": "Enter Newhouse 2",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/4-20250915_1757969528100.jpg",
+      "hotspots": [
+        {
+          "id": 14,
+          "type": "navigation",
+          "position": "7.25 1.63 -1.92",
+          "text": "",
+          "scene": "scene_1758142345201",
+          "navigationTarget": "scene_1758142756026",
+          "audio": null
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "position": "5.65 2.97 -4.74",
+          "text": "The Dick Clark Studios at Syracuse University are part of the Newhouse School of Public Communications and serve as a professional-grade media production space for students. Opened in 2014 and named after legendary broadcaster and Syracuse alumnus Dick Clark, the studios are equipped with state-of-the-art technology for television, film, and digital media production. Students use the space to produce news broadcasts, talk shows, and creative video projects, gaining real-world experience in a setting that mirrors the professional media industry.",
+          "scene": "scene_1758142345201",
+          "navigationTarget": null,
+          "audio": null,
+          "popupWidth": 6,
+          "popupHeight": 3
+        },
+        {
+          "id": 25,
+          "type": "navigation",
+          "position": "-7.42 1.57 -1.09",
+          "text": "",
+          "scene": "scene_1758142345201",
+          "navigationTarget": "scene_1758142084180",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    },
+    "scene_1758142756026": {
+      "name": "Walk up the most beautiful staircase in Newhouse 2",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/5-20250915_1757969534627.jpg",
+      "hotspots": [
+        {
+          "id": 16,
+          "type": "navigation",
+          "position": "6.88 3.33 -2.45",
+          "text": "",
+          "scene": "scene_1758142756026",
+          "navigationTarget": "scene_1758145557246",
+          "audio": null
+        },
+        {
+          "id": 29,
+          "type": "navigation",
+          "position": "-6.88 3.33 2.45",
+          "text": "",
+          "scene": "scene_1758142756026",
+          "navigationTarget": "scene_1758142345201",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    },
+    "scene_1758145557246": {
+      "name": "2nd of Newhouse 2",
+      "image": "https://hkfsgnludtapbbtsacwd.supabase.co/storage/v1/object/public/files/Wenyu%20Song/images/6-20250915_1757969544464.jpg",
+      "hotspots": [
+        {
+          "id": 15,
+          "type": "text",
+          "position": "7.24 1.00 -1.86",
+          "text": "This way to the Innovation Lab",
+          "scene": "scene_1758145557246",
+          "navigationTarget": null,
+          "audio": null
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "position": "1.77 1.59 -7.29",
+          "text": "The Alan Gerry Center for Media Innovation is located within Newhouse 2 at Syracuse University. Established through a gift from cable television pioneer Alan Gerry, the center serves as a hub for exploring the future of digital media, journalism, and communication technology. It brings together students, faculty, and industry professionals to experiment with new storytelling formats, interactive media, and emerging communication tools. The center embodies Newhouse's commitment to innovation and leadership in the evolving media landscape.",
+          "scene": "scene_1758145557246",
+          "navigationTarget": null,
+          "audio": null,
+          "popupWidth": 6,
+          "popupHeight": 4
+        },
+        {
+          "id": 30,
+          "type": "navigation",
+          "position": "-6.88 3.33 2.45",
+          "text": "",
+          "scene": "scene_1758145557246",
+          "navigationTarget": "scene_1758142756026",
+          "audio": null
+        }
+      ],
+      "startingPoint": null,
+      "globalSound": null
+    }
+  },
+  "currentScene": "room1",
+  "version": "1.0"
+}
