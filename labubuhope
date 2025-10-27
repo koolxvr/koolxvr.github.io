@@ -1,156 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labubu Hope: A Spark of Light in Every Heart</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+import React from 'react';
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            line-height: 1.8;
-            min-height: 100vh;
-            padding: 20px;
-        }
+// --- Constants ---
+const HOPE_SCENE_URL = 'https://firebasestorage.googleapis.com/v0/b/story-splat.firebasestorage.app/o/users%2F8k7yPPDybydxHtrPzfopxuv2gRy1%2Fhtml%2FLabubu%20%22Hope%22%20-%20Wenyu%20(Xavier)%20Song.html?alt=media&token=cd72075c-bb20-4d16-b424-8eca5d775487';
+const IMG_ONE = 'https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2024/12/24/857a7e60-2a86-4b91-88c0-f3e650f68384_7a554a82.jpg';
+const IMG_TWO = 'https://upload.wikimedia.org/wikipedia/en/a/a9/Pop_Mart_Labubu_The_Monsters_Exciting_Macaron.jpg';
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
+// --- Tiny dev-only tests (console-only) ---
+function isValidHttpUrl(u) { try { const x = new URL(u); return x.protocol === 'http:' || x.protocol === 'https:'; } catch { return false; } }
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+  console.assert(isValidHttpUrl(HOPE_SCENE_URL), '[TEST] HOPE_SCENE_URL should be a valid http(s) URL');
+  console.assert(isValidHttpUrl(IMG_ONE), '[TEST] IMG_ONE should be a valid http(s) URL');
+  console.assert(isValidHttpUrl(IMG_TWO), '[TEST] IMG_TWO should be a valid http(s) URL');
+}
 
-        header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            padding: 60px 40px;
-            text-align: center;
-            color: white;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            opacity: 0.95;
-            font-weight: 300;
-        }
-
-        .viewer-section {
-            padding: 40px;
-            background: #f8f9fa;
-        }
-
-        .viewer-container {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            background: white;
-        }
-
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            display: block;
-        }
-
-        .content-section {
-            padding: 50px 40px;
-        }
-
-        .content-section p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            color: #555;
-            text-align: justify;
-        }
-
-        .content-section p:first-of-type::first-letter {
-            font-size: 3em;
-            font-weight: bold;
-            float: left;
-            line-height: 0.9;
-            margin: 5px 10px 0 0;
-            color: #f5576c;
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-        }
-
-        footer {
-            background: #2d3748;
-            color: white;
-            text-align: center;
-            padding: 30px;
-            font-size: 0.9em;
-        }
-
-        footer p {
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .viewer-section, .content-section, header {
-                padding: 30px 20px;
-            }
-
-            iframe {
-                height: 400px;
-            }
-
-            .content-section p {
-                font-size: 1em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Labubu Hope: A Spark of Light in Every Heart</h1>
-            <p class="subtitle">Experience the magic of optimism in 360°</p>
-        </header>
-
-        <div class="viewer-section">
-            <div class="viewer-container">
-                <iframe src="https://firebasestorage.googleapis.com/v0/b/story-splat.firebasestorage.app/o/users%2F8k7yPPDybydxHtrPzfopxuv2gRy1%2Fhtml%2FLabubu%20%22Hope%22%20-%20Wenyu%20(Xavier)%20Song.html?alt=media&token=80213da8-887d-4496-a001-83f1674f22b7"></iframe>
+export default function LabubuShowcasePage() {
+  return (
+    <div className='min-h-screen bg-neutral-50 text-neutral-900'>
+      {/* Header */}
+      <header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b border-neutral-200'>
+        <div className='mx-auto max-w-6xl px-4 py-3 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <span className='inline-flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white font-semibold'>L</span>
+            <div>
+              <p className='text-sm uppercase tracking-[0.2em] text-neutral-500'>POP MART • Kasing Lung</p>
+              <h1 className='text-lg font-bold leading-none'>Labubu — Series Showcase</h1>
             </div>
+          </div>
         </div>
+      </header>
 
-        <div class="content-section">
-            <p>In the whimsical world of Labubu, every figure tells a story — and <span class="highlight">Hope</span> is perhaps the most heartfelt of them all. Created by Hong Kong artist Kasing Lung and produced by POP MART, Labubu Hope carries a simple yet powerful message: even in moments of uncertainty, there is always a reason to smile.</p>
-
-            <p>With its signature wide grin, fluffy ears, and bright, curious eyes, Labubu Hope captures the pure essence of optimism. The figure's gentle color palette and handcrafted details make it more than a collectible — it's a reminder of warmth, comfort, and resilience. Whether placed on a desk, a shelf, or a bedside table, Hope seems to whisper: <em>"Don't give up — better days are coming."</em></p>
-
-            <p>For many collectors, Labubu Hope is more than just part of the series; it represents a feeling. It celebrates imagination, friendship, and the belief that even the smallest spark can light up the darkest room. Through its playful yet emotional design, it connects art and heart — inviting everyone to find a little <span class="highlight">"hope"</span> of their own.</p>
+      {/* Hero / Overview */}
+      <section id='overview' className='mx-auto max-w-6xl px-4 py-14'>
+        <h2 className='text-4xl md:text-5xl font-extrabold mb-6'>The World of Labubu — Where Mischief Meets Magic</h2>
+        <p className='text-neutral-700 leading-relaxed mb-4'>
+          Born from the imagination of Hong Kong artist <strong>Kasing Lung</strong> and produced by <strong>POP MART</strong>, Labubu has become one of the most beloved art toy characters in the world. With its pointy ears, mischievous grin, and timeless childlike energy, Labubu stands as a symbol of creativity, innocence, and joy.
+        </p>
+        <p className='text-neutral-700 leading-relaxed mb-8'>
+          Each edition tells a different story — from playful adventures to moments of quiet reflection. The series spans seasonal lines, artist collaborations, and special event releases, all united by a singular design language that is instantly recognizable yet endlessly expressive.
+        </p>
+        <div className='grid md:grid-cols-2 gap-8'>
+          <figure>
+            <img src={IMG_ONE} alt='Labubu art toy showcase photo' className='rounded-2xl shadow-sm border border-neutral-200' />
+            <figcaption className='mt-2 text-xs text-neutral-500'>Press photo: Labubu character in lifestyle scene.</figcaption>
+          </figure>
+          <figure>
+            <img src={IMG_TWO} alt='Labubu The Monsters Macaron edition' className='rounded-2xl shadow-sm border border-neutral-200' />
+            <figcaption className='mt-2 text-xs text-neutral-500'>Series visual: The Monsters — “Exciting Macaron”.</figcaption>
+          </figure>
         </div>
+      </section>
 
-        <footer>
-            <p>Created by Kasing Lung | Produced by POP MART</p>
-            <p>© 2025 — A celebration of hope, imagination, and joy</p>
-        </footer>
+      {/* Story */}
+      <section id='story' className='mx-auto max-w-6xl px-4 pb-4'>
+        <h3 className='text-2xl font-bold mb-4'>A Character with a Story</h3>
+        <p className='text-neutral-700 leading-relaxed mb-4'>
+          First appearing in Kasing Lung’s illustrated fantasy world <em>The Monsters</em>, Labubu was imagined as a curious and slightly mischievous creature — sometimes bold, sometimes shy, always authentic. Through themed series like <strong>Forest Labubu</strong>, <strong>Starry Labubu</strong>, and <strong>Wizard Labubu</strong>, the character evolved into a multi‑dimensional symbol of emotion and imagination.
+        </p>
+        <p className='text-neutral-700 leading-relaxed mb-4'>
+          At its heart, Labubu celebrates the imperfect joy of childhood. The exaggerated grin and bright, curious eyes invite us to embrace oddness, sincerity, and wonder — a small reminder that feeling deeply is a form of courage.
+        </p>
+      </section>
+
+      {/* New: Series Guide */}
+      <section id='series' className='mx-auto max-w-6xl px-4 py-10'>
+        <h3 className='text-2xl font-bold mb-4'>Series Guide — Themes & Notable Editions</h3>
+        <div className='grid md:grid-cols-2 gap-6'>
+          <div className='rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm'>
+            <h4 className='font-semibold mb-2'>Design Language</h4>
+            <p className='text-neutral-700 text-sm leading-relaxed'>
+              Pointy ears, a wide mischievous smile, and a compact silhouette define Labubu’s core. Editions vary finishes (matte/gloss), palettes (pastel to vivid), and accessories (hats, capes, critters) while preserving an iconic shape.
+            </p>
+          </div>
+          <div className='rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm'>
+            <h4 className='font-semibold mb-2'>Notable Lines</h4>
+            <ul className='text-neutral-700 text-sm leading-relaxed list-disc pl-5'>
+              <li>Seasonal series (Spring/Rainy Day/Sleepy)</li>
+              <li>Fantasy series (Wizard/Starry/Forest)</li>
+              <li>Event & collaboration editions</li>
+              <li>Blind‑box surprises and chases</li>
+            </ul>
+          </div>
+          <div className='rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm'>
+            <h4 className='font-semibold mb-2'>Materials & Finish</h4>
+            <p className='text-neutral-700 text-sm leading-relaxed'>
+              Durable PVC/ABS typical of designer toys; select runs feature flocking, translucent parts, or glitter finishes. Hand‑finished paint apps add subtle variation — each piece carries small nuances.
+            </p>
+          </div>
+          <div className='rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm'>
+            <h4 className='font-semibold mb-2'>Care & Display</h4>
+            <p className='text-neutral-700 text-sm leading-relaxed'>
+              Avoid direct sun and high humidity. Dust with a soft brush. For display, diffused light highlights sculpted contours; risers or mirror backs can enhance shelf presence.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Spotlight: Hope 360 */}
+      <section id='hope360' className='mx-auto max-w-6xl px-4 py-14'>
+        <h3 className='text-3xl font-extrabold mb-3 text-amber-700'>Labubu Hope — 360° Showcase</h3>
+        <p className='text-neutral-700 leading-relaxed mb-4'>
+          <strong>Labubu Hope</strong> embodies warmth and optimism. With soft tones and a peaceful expression, Hope is a quiet reminder that light can still break through uncertainty. In 360°, textures, contours, and micro‑details become part of the storytelling — transforming a figure into an intimate art experience.
+        </p>
+        <p className='text-neutral-700 leading-relaxed mb-6'>
+          Tip: View in a bright room with indirect light; if you’re on mobile, rotate the phone to landscape for a wider viewport.
+        </p>
+        <div className='rounded-3xl border border-neutral-200 bg-white shadow-sm p-3'>
+          {/* User‑provided iframe (use single quotes in JSX to avoid escape issues) */}
+          <iframe
+            src={HOPE_SCENE_URL}
+            title='Labubu Hope 360 Scene'
+            style={{ width: '100%', height: '600px', border: 'none' }}
+            loading='lazy'
+            allow='fullscreen; xr-spatial-tracking; camera; gyroscope; accelerometer'
+            allowFullScreen
+            referrerPolicy='no-referrer'
+          />
+          <p className='mt-3 text-xs text-neutral-500'>If the 360° viewer does not appear, your environment may be blocking iframes. <a href={HOPE_SCENE_URL} target='_blank' rel='noreferrer' className='underline'>Open the 360° scene in a new tab</a>.</p>
+        </div>
+      </section>
+
+      {/* Buying Guide / Authenticity */}
+      <section id='guide' className='mx-auto max-w-6xl px-4 pb-14'>
+        <h3 className='text-2xl font-bold mb-4'>Collector’s Guide — Buying & Authenticity</h3>
+        <ul className='text-neutral-700 leading-relaxed list-disc pl-5'>
+          <li className='mb-2'><strong>Boxes & COA:</strong> Keep original packaging and any certificates; they help maintain long‑term value.</li>
+          <li className='mb-2'><strong>Release Info:</strong> Verify edition names, release windows, and paint variants before purchasing.</li>
+          <li className='mb-2'><strong>Condition:</strong> Inspect for paint transfers or factory marks; minor variations are common in hand‑finished toys.</li>
+          <li className='mb-2'><strong>Community:</strong> Join collector forums/groups for trade references and photo comparisons.</li>
+        </ul>
+      </section>
+
+      {/* FAQ */}
+      <section id='faq' className='mx-auto max-w-6xl px-4 pb-20'>
+        <h3 className='text-2xl font-bold mb-4'>FAQ</h3>
+        <details className='rounded-2xl border border-neutral-200 bg-white p-4 mb-3'>
+          <summary className='font-medium cursor-pointer'>Why doesn’t the 360° scene load on my site?</summary>
+          <p className='mt-2 text-sm text-neutral-700'>Your host or the file host may block third‑party iframes (CSP/X‑Frame‑Options). Open the new‑tab link above or self‑host the HTML under the same domain.</p>
+        </details>
+        <details className='rounded-2xl border border-neutral-200 bg-white p-4 mb-3'>
+          <summary className='font-medium cursor-pointer'>How do I care for flocked or translucent editions?</summary>
+          <p className='mt-2 text-sm text-neutral-700'>Avoid moisture and solvents. Use a soft, dry brush for flocking; microfiber for standard PVC/ABS surfaces.</p>
+        </details>
+      </section>
     </div>
-</body>
-</html>
+  );
+}
