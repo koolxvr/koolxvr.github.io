@@ -1,39 +1,10 @@
 import React from 'react';
 
-/**
- * Fix summary:
- * - Previous canvas contained a full HTML document (<!DOCTYPE html> ...), but the runtime
- *   is compiling this file as TypeScript/JSX (index.tsx). That caused `SyntaxError: Unexpected token (1:0)`.
- * - Replaced the raw HTML with a proper React component that renders the same content.
- * - Converted all `class` → `className`, `allowfullscreen` → `allowFullScreen`, added `referrerPolicy`.
- * - Moved external URL strings to constants to avoid quoting/escaping bugs.
- * - Added tiny runtime test cases via console.assert (non-invasive) to satisfy the testing requirement.
- */
+// URLs
+const HOPE_SCENE_URL = 'https://firebasestorage.googleapis.com/v0/b/story-splat.firebasestorage.app/o/users%2F8k7yPPDybydxHtrPzfopxuv2gRy1%2Fhtml%2FLabubu%20%22Hope%22%20-%20Wenyu%20(Xavier)%20Song.html?alt=media&token=cd72075c-bb20-4d16-b424-8eca5d775487';
+const IMG_ONE = 'https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2024/12/24/857a7e60-2a86-4b91-88c0-f3e650f68384_7a554a82.jpg';
+const IMG_TWO = 'https://upload.wikimedia.org/wikipedia/en/a/a9/Pop_Mart_Labubu_The_Monsters_Exciting_Macaron.jpg';
 
-// ---------------- Constants ----------------
-const HOPE_SCENE_URL =
-  'https://firebasestorage.googleapis.com/v0/b/story-splat.firebasestorage.app/o/users%2F8k7yPPDybydxHtrPzfopxuv2gRy1%2Fhtml%2FLabubu%20%22Hope%22%20-%20Wenyu%20(Xavier)%20Song.html?alt=media&token=cd72075c-bb20-4d16-b424-8eca5d775487';
-const IMG_ONE =
-  'https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2024/12/24/857a7e60-2a86-4b91-88c0-f3e650f68384_7a554a82.jpg';
-const IMG_TWO =
-  'https://upload.wikimedia.org/wikipedia/en/a/a9/Pop_Mart_Labubu_The_Monsters_Exciting_Macaron.jpg';
-
-// --------------- Tiny Runtime Tests ---------------
-function isValidHttpUrl(u: string): boolean {
-  try {
-    const x = new URL(u);
-    return x.protocol === 'https:' || x.protocol === 'http:';
-  } catch {
-    return false;
-  }
-}
-if (typeof window !== 'undefined') {
-  console.assert(isValidHttpUrl(HOPE_SCENE_URL), '[TEST] HOPE_SCENE_URL must be a valid http(s) URL');
-  console.assert(isValidHttpUrl(IMG_ONE), '[TEST] IMG_ONE must be a valid http(s) URL');
-  console.assert(isValidHttpUrl(IMG_TWO), '[TEST] IMG_TWO must be a valid http(s) URL');
-}
-
-// --------------- Page Component ---------------
 export default function LabubuShowcasePage() {
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
@@ -41,37 +12,21 @@ export default function LabubuShowcasePage() {
       <header className="sticky top-0 z-30 backdrop-blur bg-white/70 border-b border-neutral-200">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a
-              href="/"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white font-semibold"
-              aria-label="Home"
-            >
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white font-semibold">
               L
-            </a>
+            </span>
             <div>
               <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-neutral-500">POP MART • Kasing Lung</p>
               <h1 className="text-base md:text-lg font-bold leading-none">Labubu — Series Showcase</h1>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-700">
-            <a href="#overview" className="hover:text-neutral-900">
-              Overview
-            </a>
-            <a href="#story" className="hover:text-neutral-900">
-              Story
-            </a>
-            <a href="#series" className="hover:text-neutral-900">
-              Series Guide
-            </a>
-            <a href="#hope360" className="hover:text-neutral-900">
-              Hope 360°
-            </a>
-            <a href="#guide" className="hover:text-neutral-900">
-              Collector
-            </a>
-            <a href="#faq" className="hover:text-neutral-900">
-              FAQ
-            </a>
+            <a href="#overview" className="hover:text-neutral-900">Overview</a>
+            <a href="#story" className="hover:text-neutral-900">Story</a>
+            <a href="#series" className="hover:text-neutral-900">Series Guide</a>
+            <a href="#hope360" className="hover:text-neutral-900">Hope 360°</a>
+            <a href="#guide" className="hover:text-neutral-900">Collector</a>
+            <a href="#faq" className="hover:text-neutral-900">FAQ</a>
           </nav>
         </div>
       </header>
@@ -81,17 +36,7 @@ export default function LabubuShowcasePage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-2">Labubu Hope 360° — Where Mischief Meets Magic</h2>
           <div className="flex gap-2 mb-4">
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm border border-neutral-200 hover:border-neutral-300"
-              title="Back to Home"
-            >
-              ⬅︎ Home
-            </a>
-            <a
-              href="#hope360"
-              className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm text-white hover:opacity-90"
-            >
+            <a href="#hope360" className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm text-white hover:opacity-90">
               View Hope in 360°
             </a>
           </div>
@@ -108,20 +53,12 @@ export default function LabubuShowcasePage() {
         </p>
         <div className="grid md:grid-cols-2 gap-8">
           <figure>
-            <img
-              src={IMG_ONE}
-              alt="Labubu art toy showcase photo"
-              className="rounded-2xl shadow-sm border border-neutral-200"
-            />
+            <img src={IMG_ONE} alt="Labubu art toy showcase photo" className="rounded-2xl shadow-sm border border-neutral-200" />
             <figcaption className="mt-2 text-xs text-neutral-500">Press photo: Labubu character in lifestyle scene.</figcaption>
           </figure>
           <figure>
-            <img
-              src={IMG_TWO}
-              alt="Labubu The Monsters Macaron edition"
-              className="rounded-2xl shadow-sm border border-neutral-200"
-            />
-            <figcaption className="mt-2 text-xs text-neutral-500">Series visual: The Monsters — “Exciting Macaron”.</figcaption>
+            <img src={IMG_TWO} alt="Labubu The Monsters Macaron edition" className="rounded-2xl shadow-sm border border-neutral-200" />
+            <figcaption className="mt-2 text-xs text-neutral-500">Series visual: The Monsters — "Exciting Macaron".</figcaption>
           </figure>
         </div>
       </section>
@@ -130,7 +67,7 @@ export default function LabubuShowcasePage() {
       <section id="story" className="mx-auto max-w-6xl px-4 pb-4">
         <h3 className="text-2xl font-bold mb-4">A Character with a Story</h3>
         <p className="text-neutral-700 leading-relaxed mb-4">
-          First appearing in Kasing Lung’s illustrated fantasy world <em>The Monsters</em>, Labubu was imagined as a curious and
+          First appearing in Kasing Lung's illustrated fantasy world <em>The Monsters</em>, Labubu was imagined as a curious and
           slightly mischievous creature — sometimes bold, sometimes shy, always authentic. Through themed series like
           <strong> Forest Labubu</strong>, <strong> Starry Labubu</strong>, and <strong> Wizard Labubu</strong>, the character evolved into a
           multi‑dimensional symbol of emotion and imagination.
@@ -148,7 +85,7 @@ export default function LabubuShowcasePage() {
           <div className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
             <h4 className="font-semibold mb-2">Design Language</h4>
             <p className="text-neutral-700 text-sm leading-relaxed">
-              Pointy ears, a wide mischievous smile, and a compact silhouette define Labubu’s core. Editions vary finishes
+              Pointy ears, a wide mischievous smile, and a compact silhouette define Labubu's core. Editions vary finishes
               (matte/gloss), palettes (pastel to vivid), and accessories (hats, capes, critters) while preserving an iconic shape.
             </p>
           </div>
@@ -187,17 +124,14 @@ export default function LabubuShowcasePage() {
           the storytelling — transforming a figure into an intimate art experience.
         </p>
         <p className="text-neutral-700 leading-relaxed mb-6">
-          Tip: View in a bright room with indirect light; if you’re on mobile, rotate the phone to landscape for a wider viewport.
+          Tip: View in a bright room with indirect light; if you're on mobile, rotate the phone to landscape for a wider viewport.
         </p>
         <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-3">
           <iframe
             src={HOPE_SCENE_URL}
             title="Labubu Hope 360 Scene"
             style={{ width: '100%', height: '600px', border: 'none' }}
-            loading="lazy"
-            referrerPolicy="no-referrer"
             allow="fullscreen; xr-spatial-tracking; camera; gyroscope; accelerometer"
-            allowFullScreen
           />
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-neutral-600">
             <span>If the 360° viewer does not appear, your environment may be blocking iframes.</span>
@@ -207,7 +141,7 @@ export default function LabubuShowcasePage() {
               rel="noreferrer"
               className="inline-flex items-center rounded-lg border border-neutral-200 px-3 py-1.5 hover:border-neutral-300"
             >
-              Open the 360° scene in a new tab
+              Open in new tab
             </a>
           </div>
         </div>
@@ -215,7 +149,7 @@ export default function LabubuShowcasePage() {
 
       {/* Collector Guide */}
       <section id="guide" className="mx-auto max-w-6xl px-4 pb-14">
-        <h3 className="text-2xl font-bold mb-4">Collector’s Guide — Buying & Authenticity</h3>
+        <h3 className="text-2xl font-bold mb-4">Collector's Guide — Buying & Authenticity</h3>
         <ul className="text-neutral-700 leading-relaxed list-disc pl-5">
           <li className="mb-2">
             <strong>Boxes & COA:</strong> Keep original packaging and any certificates; they help maintain long‑term value.
@@ -236,24 +170,13 @@ export default function LabubuShowcasePage() {
       <section id="faq" className="mx-auto max-w-6xl px-4 pb-20">
         <h3 className="text-2xl font-bold mb-4">FAQ</h3>
         <details className="rounded-2xl border border-neutral-200 bg-white p-4 mb-3">
-          <summary className="font-medium cursor-pointer">为什么我打开会自动下载？</summary>
+          <summary className="font-medium cursor-pointer">What is Labubu "Hope" in the series lineup?</summary>
           <p className="mt-2 text-sm text-neutral-700">
-            请使用 GitHub Pages 的网站地址（例如 <code>https://koolxvr.github.io/labubuhope/</code>）。如果访问的是仓库文件或 Raw 链接，浏览器会当作附件下载。
+            "Hope" is a thematic edition that emphasizes warmth and optimism through a softer palette and calm facial expression. It
+            represents the reflective, comforting side of Labubu while retaining the character's iconic silhouette.
           </p>
         </details>
         <details className="rounded-2xl border border-neutral-200 bg-white p-4 mb-3">
-          <summary className="font-medium cursor-pointer">为什么 360° 场景不显示？</summary>
+          <summary className="font-medium cursor-pointer">What are typical sizes and materials?</summary>
           <p className="mt-2 text-sm text-neutral-700">
-            可能是托管端或站点的 CSP/X‑Frame‑Options 限制。请点击上面的“Open the 360° scene in a new tab”在新标签页查看，或将该 HTML 自托管到本域。
-          </p>
-        </details>
-        <details className="rounded-2xl border border-neutral-200 bg-white p-4 mb-3">
-          <summary className="font-medium cursor-pointer">如何清洁绒毛或半透明款？</summary>
-          <p className="mt-2 text-sm text-neutral-700">
-            避免水汽与清洁剂。绒毛用软毛刷轻刷；普通 PVC/ABS 用超细纤维布干拭。
-          </p>
-        </details>
-      </section>
-    </div>
-  );
-}
+            Most Labubu figures are made from PVC/ABS
