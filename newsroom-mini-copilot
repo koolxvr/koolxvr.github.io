@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Newsroom Mini Copilot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1000px;
+      margin: 32px 16px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #020617, #020617, #020617);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      padding: 20px 22px 24px;
+      backdrop-filter: blur(16px);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 span.badge {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .top-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .api-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1 1 260px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    input[type="password"],
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      background-color: rgba(15, 23, 42, 0.9);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background-color 0.15s ease;
+    }
+
+    input[type="password"]:focus,
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+      background-color: #020617;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+
+    .tabs {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-soft);
+      color: #e0f2fe;
+      border-color: var(--accent);
+    }
+
+    .tab-btn span.icon {
+      font-size: 14px;
+    }
+
+    .panels {
+      margin-top: 16px;
+    }
+
+    .panel {
+      display: none;
+      border-radius: 14px;
+      padding: 14px 14px 16px;
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    @media (min-width: 780px) {
+      .grid-2 {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+
+    .output-box {
+      font-size: 13px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      min-height: 120px;
+      overflow-y: auto;
+    }
+
+    .btn {
+      margin-top: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #0ea5e9, #22d3ee);
+      color: #0b1120;
+      font-weight: 500;
+      box-shadow: 0 10px 20px rgba(34, 211, 238, 0.35);
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        filter 0.15s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.7);
+      filter: brightness(0.95);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: none;
+    }
+
+    .helper-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      gap: 8px;
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--accent);
+      min-height: 14px;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <h1>
+        Newsroom Mini Copilot
+        <span class="badge">Field Test Prototype</span>
+      </h1>
+      <div class="subtitle">
+        A tiny AI assistant for repetitive newsroom tasks:
+        headline drafts, localization, and interview summaries.
+      </div>
+
+      <div class="top-row">
+        <div class="api-box">
+          <label for="apiKey">OpenAI API key</label>
+          <input
+            id="apiKey"
+            type="password"
+            placeholder="sk-..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="pill-row">
+          <div class="pill">⏱ Measure time with &amp; without copilot</div>
+          <div class="pill">✏️ Focus: speed + clarity, not full automation</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="headline">
+          <span class="icon">📰</span> Headline optimizer
+        </button>
+        <button class="tab-btn" data-tab="localizer">
+          <span class="icon">🌍</span> Multilingual localizer
+        </button>
+        <button class="tab-btn" data-tab="summary">
+          <span class="icon">🎙</span> Interview summarizer
+        </button>
+      </div>
+
+      <div class="panels">
+        <!-- Headline panel -->
+        <div class="panel active" id="panel-headline">
+          <div class="panel-header">
+            <div class="panel-title">Headline optimizer</div>
+            <div class="panel-subtitle">
+              Paste a working headline and get alternative angles.
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <textarea
+                id="headlineInput"
+                placeholder="Paste your working headline here..."
+              ></textarea>
+              <div class="helper-row">
+                <div class="helper-text">
+                  Tip: use a real story you reported or from NewsHouse.
+                </div>
+                <button class="btn secondary" id="headlineSample">
+                  Sample headline
+                </button>
+              </div>
+              <button class="btn" id="headlineRun">
+                ⚡ Generate alternative headlines
+              </button>
+              <div class="status" id="headlineStatus"></div>
+            </div>
+            <div>
+              <div class="output-box" id="headlineOutput">
+                Optimized versions will appear here.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Localizer panel -->
+        <div class="panel" id="panel-localizer">
+          <div class="panel-header">
+            <div class="panel-title">Multilingual localizer</div>
+            <div class="panel-subtitle">
+              Test how AI can adapt a short story for different audiences.
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <textarea
+                id="localizerInput"
+                placeholder="Paste a short news brief or paragraph..."
+              ></textarea>
+              <div class="helper-row">
+                <div class="helper-text">
+                  Choose a target language and audience tone.
+                </div>
+                <select id="targetLang">
+                  <option value="Simplified Chinese (for Chinese international students in the U.S.)">
+                    Chinese (for Chinese international students)
+                  </option>
+                  <option value="Spanish (for U.S. Spanish-speaking readers)">
+                    Spanish (U.S. Spanish-speaking readers)
+                  </option>
+                  <option value="neutral international English">
+                    Neutral international English
+                  </option>
+                </select>
+              </div>
+              <button class="btn" id="localizerRun">
+                🌐 Localize story
+              </button>
+              <div class="status" id="localizerStatus"></div>
+            </div>
+            <div>
+              <div class="output-box" id="localizerOutput">
+                Localized version will appear here.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summarizer panel -->
+        <div class="panel" id="panel-summary">
+          <div class="panel-header">
+            <div class="panel-title">Interview summarizer</div>
+            <div class="panel-subtitle">
+              Turn long interview notes into a quick editorial brief.
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <textarea
+                id="summaryInput"
+                placeholder="Paste 1–3 paragraphs of an interview transcript or notes..."
+              ></textarea>
+              <div class="helper-row">
+                <div class="helper-text">
+                  Output: short nut graf, 3 key points, and 1 strong quote.
+                </div>
+                <button class="btn secondary" id="summarySample">
+                  Sample transcript
+                </button>
+              </div>
+              <button class="btn" id="summaryRun">
+                🎧 Summarize interview
+              </button>
+              <div class="status" id="summaryStatus"></div>
+            </div>
+            <div>
+              <div class="output-box" id="summaryOutput">
+                Summary brief will appear here.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        Prototype for field test only — outputs must be edited and verified
+        by humans.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Simple tab switching ----
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const panels = {
+      headline: document.getElementById("panel-headline"),
+      localizer: document.getElementById("panel-localizer"),
+      summary: document.getElementById("panel-summary"),
+    };
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        Object.keys(panels).forEach((key) => {
+          panels[key].classList.toggle("active", key === tab);
+        });
+      });
+    });
+
+    // ---- Core API caller ----
+    async function callModel(systemPrompt, userPrompt, statusEl) {
+      const apiKey = document.getElementById("apiKey").value.trim();
+      if (!apiKey) {
+        alert("Please paste your OpenAI-compatible API key first.");
+        return null;
+      }
+
+      statusEl.textContent = "Thinking…";
+
+      try {
+        const response = await fetch(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + apiKey,
+            },
+            body: JSON.stringify({
+              model: "gpt-4o-mini", // you can change to another model if needed
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+              temperature: 0.7,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errText = await response.text();
+          console.error("API error:", errText);
+          statusEl.textContent = "Error from API. Check console.";
+          return null;
+        }
+
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content?.trim();
+        statusEl.textContent = "Done.";
+        return content || "";
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Network error.";
+        return null;
+      }
+    }
+
+    // ---- Headline optimizer ----
+    document.getElementById("headlineSample").addEventListener("click", () => {
+      document.getElementById("headlineInput").value =
+        "Students struggle to keep up with rising housing costs near campus";
+    });
+
+    document
+      .getElementById("headlineRun")
+      .addEventListener("click", async () => {
+        const input = document
+          .getElementById("headlineInput")
+          .value.trim();
+        const statusEl = document.getElementById("headlineStatus");
+        const outEl = document.getElementById("headlineOutput");
+
+        if (!input) {
+          alert("Please paste a working headline.");
+          return;
+        }
+
+        const systemPrompt =
+          "You are an experienced copy editor at a digital newsroom. " +
+          "You help reporters generate alternative headline options that are clear, accurate, engaging, " +
+          "and aligned with basic journalistic standards. You always avoid clickbait.";
+
+        const userPrompt = `
+Working headline:
+"${input}"
+
+Generate:
+1) A clearer, more straightforward version.
+2) A more engaging, curiosity-driven version (but still accurate, no clickbait).
+3) A shorter, mobile-friendly version (max ~55 characters).
+
+Format your answer as:
+1. [Clear]: ...
+2. [Engaging]: ...
+3. [Short]: ...
+        `;
+
+        const result = await callModel(systemPrompt, userPrompt, statusEl);
+        if (result) outEl.textContent = result;
+      });
+
+    // ---- Localizer ----
+    document
+      .getElementById("localizerRun")
+      .addEventListener("click", async () => {
+        const input = document
+          .getElementById("localizerInput")
+          .value.trim();
+        const lang = document.getElementById("targetLang").value;
+        const statusEl = document.getElementById("localizerStatus");
+        const outEl = document.getElementById("localizerOutput");
+
+        if (!input) {
+          alert("Please paste a short story or brief.");
+          return;
+        }
+
+        const systemPrompt =
+          "You are a journalist who specializes in cross-cultural localization. " +
+          "You translate short news items while preserving accuracy, context, and appropriate tone " +
+          "for the specified target audience.";
+
+        const userPrompt = `
+Original text:
+${input}
+
+Target language and audience:
+${lang}
+
+Tasks:
+1) Translate the text into the target language.
+2) Lightly adapt references or phrasing so it feels natural for that audience.
+3) Keep the style journalistic and neutral, not promotional.
+4) After the translation, add 2 bullet points in English explaining any major localization choices.
+        `;
+
+        const result = await callModel(systemPrompt, userPrompt, statusEl);
+        if (result) outEl.textContent = result;
+      });
+
+    // ---- Interview summarizer ----
+    document.getElementById("summarySample").addEventListener("click", () => {
+      document.getElementById("summaryInput").value =
+        `Q: How has rising rent near campus affected you this semester?
+A: I work two part-time jobs now just to make rent. I used to spend more time at student events, but now I go straight from class to work. I’ve thought about moving farther away, but then I’d have to pay for a car or spend even more time on the bus.
+
+Q: What do you wish the university or city would do?
+A: Honestly, just acknowledge that this is a problem. It feels like everyone assumes students can just ask their parents for money. Some of us can’t. Even small things, like more transparent info on housing options or legal help for bad landlords, would make a difference.`;
+    });
+
+    document
+      .getElementById("summaryRun")
+      .addEventListener("click", async () => {
+        const input = document
+          .getElementById("summaryInput")
+          .value.trim();
+        const statusEl = document.getElementById("summaryStatus");
+        const outEl = document.getElementById("summaryOutput");
+
+        if (!input) {
+          alert("Please paste an interview excerpt or notes.");
+          return;
+        }
+
+        const systemPrompt =
+          "You are a magazine feature editor. You turn raw interview notes into a quick brief " +
+          "that a reporter can use to draft a story.";
+
+        const userPrompt = `
+Here is an interview excerpt or rough notes:
+
+${input}
+
+Please produce:
+1) A 2–3 sentence nut graf summarizing what this source is saying and why it matters.
+2) Three bullet points capturing the most important takeaways (one idea per bullet).
+3) One strong, well-edited quote that could be used in a story lead or kicker.
+
+Keep the tone journalistic and neutral, not advocacy.
+        `;
+
+        const result = await callModel(systemPrompt, userPrompt, statusEl);
+        if (result) outEl.textContent = result;
+      });
+  </script>
+</body>
+</html>
